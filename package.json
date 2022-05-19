@@ -1,0 +1,32 @@
+{
+  "name": "artibot-moderation",
+  "version": "1.3.0",
+  "description": "Add moderation utilities to your Discord bot",
+  "main": "index.js",
+	"type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoudronViande24/artibot-moderation.git"
+  },
+  "keywords": [
+    "artibot",
+    "moderation",
+    "automod",
+    "bot",
+    "discord",
+    "artivain"
+  ],
+  "author": "GoudronViande24",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GoudronViande24/artibot-moderation/issues"
+  },
+  "homepage": "https://github.com/GoudronViande24/artibot-moderation#readme",
+  "dependencies": {
+    "artibot": "^3.0.8",
+    "humanize-duration": "^3.27.1"
+  }
+}
