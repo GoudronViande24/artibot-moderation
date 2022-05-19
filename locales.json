@@ -34,8 +34,8 @@
 			"fr": "`[[0]]` n'est pas une durée valide."
 		},
 
-		"You have been muted by [[0]] for [[1]] on **[[1]]** server.": {
-			"fr": "Vous avez été réduit au silence par [[0]] pendant [[1]] sur **[[1]]**."
+		"You have been muted by [[0]] for [[1]] on **[[2]]** server.": {
+			"fr": "Vous avez été réduit au silence par [[0]] pendant [[1]] sur **[[2]]**."
 		},
 
 		"Reason": {

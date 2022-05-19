@@ -66,7 +66,7 @@ export default async (interaction, { config, log, createEmbed }) => {
 
 		const dmEmbed = createEmbed()
 			.setTitle("Mute")
-			.setDescription(localizer.__("You have been muted by [[0]] for [[1]] on **[[1]]** server.", { placeholders: [moderator, humanTime, guild.name] }));
+			.setDescription(localizer.__("You have been muted by [[0]] for [[1]] on **[[2]]** server.", { placeholders: [moderator, humanTime, guild.name] }));
 
 		if (reason) dmEmbed.addField("Reason", reason);
 
