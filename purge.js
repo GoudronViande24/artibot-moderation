@@ -1,5 +1,5 @@
 import { localizer } from "./index.js";
-import { Permissions, MessageActionRow, MessageButton, CommandInteraction } from "discord.js";
+import { PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, CommandInteraction } from "discord.js";
 import Artibot from "artibot";
 
 /**
@@ -10,11 +10,11 @@ import Artibot from "artibot";
  * @param {Artibot} artibot
  */
 export default async (interaction, { createEmbed }) => {
-	if (!interaction.memberPermissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
+	if (!interaction.memberPermissions.has(PermissionsBitField.Flags.ManageMessages)) {
 		return await interaction.reply({
 			embeds: [
 				createEmbed()
-					.setColor("RED")
+					.setColor("Red")
 					.setTitle("Purge")
 					.setDescription(localizer._("**Error:** You do not have the required permissions to use this command!"))
 			],
@@ -34,29 +34,29 @@ export default async (interaction, { createEmbed }) => {
 			)
 		);
 
-	const row = new MessageActionRow()
+	const row = new ActionRowBuilder()
 		.addComponents(
-			new MessageButton()
+			new ButtonBuilder()
 				.setLabel(localizer.__("Delete [[0]] more", { placeholders: [5] }))
-				.setStyle("DANGER")
+				.setStyle(ButtonStyle.Danger)
 				.setCustomId("purge-5")
 		)
 		.addComponents(
-			new MessageButton()
+			new ButtonBuilder()
 				.setLabel(localizer.__("Delete [[0]] more", { placeholders: [10] }))
-				.setStyle("DANGER")
+				.setStyle(ButtonStyle.Danger)
 				.setCustomId("purge-10")
 		)
 		.addComponents(
-			new MessageButton()
+			new ButtonBuilder()
 				.setLabel(localizer.__("Delete [[0]] more", { placeholders: [20] }))
-				.setStyle("DANGER")
+				.setStyle(ButtonStyle.Danger)
 				.setCustomId("purge-20")
 		)
 		.addComponents(
-			new MessageButton()
+			new ButtonBuilder()
 				.setLabel(localizer.__("Delete [[0]] more", { placeholders: [50] }))
-				.setStyle("DANGER")
+				.setStyle(ButtonStyle.Danger)
 				.setCustomId("purge-50")
 		);
 

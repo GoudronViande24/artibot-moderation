@@ -1,5 +1,5 @@
 import { localizer } from "./index.js";
-import { ButtonInteraction, Permissions } from "discord.js";
+import { ButtonInteraction, PermissionsBitField } from "discord.js";
 import Artibot from "artibot";
 
 /**
@@ -10,11 +10,11 @@ import Artibot from "artibot";
  * @param {Artibot} artibot
  */
 export default async (interaction, { createEmbed }) => {
-	if (!interaction.memberPermissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
+	if (!interaction.memberPermissions.has(PermissionsBitField.Flags.ManageMessages)) {
 		return await interaction.reply({
 			embeds: [
 				createEmbed()
-					.setColor("RED")
+					.setColor("Red")
 					.setTitle("Purge")
 					.setDescription(localizer._("**Error:** You do not have the required permissions to use this command!"))
 			],

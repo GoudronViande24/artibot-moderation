@@ -28,11 +28,11 @@ export default async (interaction, { config, log, createEmbed }) => {
 		});
 
 	// Check for required permissions
-	if (!moderator.permissions.has([Permissions.FLAGS.MODERATE_MEMBERS])) {
+	if (!moderator.permissions.has([PermissionsBitField.Flags.ModerateMembers])) {
 		return await interaction.reply({
 			embeds: [
 				createEmbed()
-					.setColor("RED")
+					.setColor("Red")
 					.setTitle("Mute")
 					.setDescription(localizer._("You don't have the required permissions to execute this command!"))
 			],
@@ -45,7 +45,7 @@ export default async (interaction, { config, log, createEmbed }) => {
 		return await interaction.reply({
 			embeds: [
 				createEmbed()
-					.setColor("RED")
+					.setColor("Red")
 					.setTitle("Mute")
 					.setDescription(localizer.__("`[[0]]` is not a valid duration.", { placeholders: [time] }))
 			],
@@ -68,21 +68,25 @@ export default async (interaction, { config, log, createEmbed }) => {
 			.setTitle("Mute")
 			.setDescription(localizer.__("You have been muted by [[0]] for [[1]] on **[[2]]** server.", { placeholders: [moderator, humanTime, guild.name] }));
 
-		if (reason) dmEmbed.addField("Reason", reason);
+		if (reason) dmEmbed.addFields({ name: "Reason", value: reason });
 
 		// Send DM to muted user to inform him of the reason and the moderator
 		try {
 			await member.send({ embeds: [dmEmbed] });
 		} catch (error) {
 			if (error == "DiscordAPIError: Cannot send messages to this user") {
-				embed.addField(localizer._("Note"), localizer._("This user does not accept DMs and so has not been warned in DM.")).setColor("YELLOW");
+				embed
+					.addFields({ name: localizer._("Note"), value: localizer._("This user does not accept DMs and so has not been warned in DM.") })
+					.setColor("Yellow");
 			} else {
-				embed.addField(localizer._("Note"), localizer._("An error occured while trying to send a DM to the user.")).setColor("ORANGE");
+				embed
+					.addFields({ name: localizer._("Note"), value: localizer._("An error occured while trying to send a DM to the user.") })
+					.setColor("Orange");
 				log("Moderation", error, "err");
 			}
 		}
 	} catch (error) {
-		embed.setColor("RED");
+		embed.setColor("Red");
 
 		if (error == "DiscordAPIError: Missing Permissions") {
 			embed.setDescription(localizer._("I don't have required permissions to mute this user!"));

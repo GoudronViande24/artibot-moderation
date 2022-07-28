@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
+import { SlashCommandBuilder } from "discord.js";
 import Artibot, { Button, Module, SlashCommand } from "artibot";
 import Localizer from "artibot-localizer";
 
