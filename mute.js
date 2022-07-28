@@ -1,7 +1,7 @@
 import { localizer } from "./index.js";
 import humanizeDuration from "humanize-duration";
 import ms from "ms";
-import { CommandInteraction, Permissions } from "discord.js";
+import { CommandInteraction, PermissionsBitField } from "discord.js";
 import Artibot from "artibot";
 
 /**
