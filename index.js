@@ -36,6 +36,7 @@ export default ({ config: { lang } }) => {
 			"fr"
 		],
 		repo: "GoudronViande24/artibot-moderation",
+		packageName: "artibot-moderation",
 		parts: [
 			new SlashCommand({
 				id: "mute",
