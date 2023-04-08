@@ -8,7 +8,7 @@ import Artibot, { log } from "artibot";
  * @author GoudronViande24
  * @since 1.0.1
  */
-export default async (interaction: ChatInputCommandInteraction<"cached">, { createEmbed }: Artibot): Promise<void> => {
+export default async (interaction: ChatInputCommandInteraction<"cached">, { createEmbed, config }: Artibot): Promise<void> => {
 	const user: User = interaction.options.getUser("user", true);
 	const guild: Guild = interaction.guild;
 	const moderator: GuildMember = interaction.member;
@@ -69,6 +69,7 @@ export default async (interaction: ChatInputCommandInteraction<"cached">, { crea
 				embed.addFields({ name: localizer._("Note"), value: localizer._("An error occured while trying to send a DM to the user.") })
 					.setColor("Orange");
 				log("Moderation", (error as Error).message, "err");
+				if (config.debug) console.log(error);
 			}
 		}
 	} catch (error) {
@@ -77,6 +78,7 @@ export default async (interaction: ChatInputCommandInteraction<"cached">, { crea
 			embed.setDescription(localizer._("I don't have required permissions to mute this user!"));
 		} else {
 			log("Moderation", (error as Error).message, "err");
+			if (config.debug) console.log(error);
 			embed.setDescription(localizer._("An error occured."));
 		}
 	}

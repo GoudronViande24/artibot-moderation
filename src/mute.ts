@@ -85,6 +85,7 @@ export default async (interaction: ChatInputCommandInteraction<"cached">, { conf
 					.addFields({ name: localizer._("Note"), value: localizer._("An error occured while trying to send a DM to the user.") })
 					.setColor("Orange");
 				log("Moderation", (error as Error).message, "err");
+				if (config.debug) console.log(error);
 			}
 		}
 	} catch (error) {
@@ -94,6 +95,7 @@ export default async (interaction: ChatInputCommandInteraction<"cached">, { conf
 			embed.setDescription(localizer._("I don't have required permissions to mute this user!"));
 		} else {
 			log("Moderation", (error as Error).message, "err");
+			if (config.debug) console.log(error);
 			embed.setDescription(localizer._("An error occured."));
 		}
 	}
