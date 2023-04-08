@@ -61,7 +61,7 @@ export default async (interaction: ChatInputCommandInteraction<"cached">, { crea
 		try {
 			await member.send({ embeds: [dmEmbed] });
 		} catch (error) {
-			if (error == "DiscordAPIError: Cannot send messages to this user") {
+			if ((error as Error).message == "Cannot send messages to this user") {
 				embed
 					.addFields({ name: localizer._("Note"), value: localizer._("This user does not accept DMs and so has not been warned in DM.") })
 					.setColor("Yellow");
@@ -74,7 +74,7 @@ export default async (interaction: ChatInputCommandInteraction<"cached">, { crea
 		}
 	} catch (error) {
 		embed.setColor("Red");
-		if (error == "DiscordAPIError: Missing Permissions") {
+		if ((error as Error).message == "Missing Permissions") {
 			embed.setDescription(localizer._("I don't have required permissions to mute this user!"));
 		} else {
 			log("Moderation", (error as Error).message, "err");
