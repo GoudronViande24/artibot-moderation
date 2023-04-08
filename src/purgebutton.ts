@@ -1,17 +1,15 @@
 import { localizer } from "./index.js";
-import { ButtonInteraction, PermissionsBitField } from "discord.js";
+import { ButtonInteraction, PermissionsBitField, Collection, Message, PartialMessage, EmbedBuilder } from "discord.js";
 import Artibot from "artibot";
 
 /**
  * Purge X messages
  * @author GoudronViande24
  * @since 1.2.0
- * @param {ButtonInteraction} interaction
- * @param {Artibot} artibot
  */
-export default async (interaction, { createEmbed }) => {
+export default async (interaction: ButtonInteraction<"cached">, { createEmbed }: Artibot): Promise<void> => {
 	if (!interaction.memberPermissions.has(PermissionsBitField.Flags.ManageMessages)) {
-		return await interaction.reply({
+		await interaction.reply({
 			embeds: [
 				createEmbed()
 					.setColor("Red")
@@ -20,16 +18,18 @@ export default async (interaction, { createEmbed }) => {
 			],
 			ephemeral: true
 		});
+
+		return;
 	}
 
-	const amount = interaction.customId.split("-")[1];
+	const amount: number = parseInt(interaction.customId.split("-")[1]);
 
-	const deleted = await interaction.channel.bulkDelete(amount, true);
+	const deleted: Collection<string, Message | PartialMessage | undefined> = await interaction.channel!.bulkDelete(amount, true);
 
-	const embed = createEmbed()
+	const embed: EmbedBuilder = createEmbed()
 		.setTitle("Purge")
 		.setDescription(
-			localizer.__("Deleted [[0]] messages.", { placeholders: [deleted.size] }) + (
+			localizer.__("Deleted [[0]] messages.", { placeholders: [deleted.size.toString()] }) + (
 				deleted.size < 1 ? "\n\n" + localizer._("By the way, I cannot delete messages older than 2 weeks.") : ""
 			)
 		);

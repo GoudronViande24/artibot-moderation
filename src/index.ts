@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const require = createRequire(import.meta.url);
-const { version } = require('./package.json');
+const { version } = require('../package.json');
 
 import muteSlashCommand from "./mute.js";
 import unmuteSlashCommand from "./unmute.js";
@@ -21,10 +21,8 @@ import purgeButton from "./purgebutton.js";
  * Moderation module for Artibot
  * @author GoudronViande24
  * @license MIT
- * @param {Artibot} artibot
- * @returns {Module}
  */
-export default ({ config: { lang } }) => {
+export default ({ config: { lang } }: Artibot): Module => {
 	localizer.setLocale(lang);
 
 	return new Module({
@@ -88,7 +86,7 @@ export default ({ config: { lang } }) => {
 							.setDescription(localizer._("How much messages to delete?"))
 							.setRequired(true)
 							.setMaxValue(100)
-							.setMinValue(0)
+							.setMinValue(1)
 					),
 				mainFunction: purgeSlashCommand
 			}),
@@ -101,6 +99,6 @@ export default ({ config: { lang } }) => {
 	});
 }
 
-export const localizer = new Localizer({
-	filePath: path.join(__dirname, "locales.json")
+export const localizer: Localizer = new Localizer({
+	filePath: path.join(__dirname, "../locales.json")
 });

@@ -1,23 +1,21 @@
 import { localizer } from "./index.js";
-import { CommandInteraction, PermissionsBitField } from "discord.js";
-import Artibot from "artibot";
+import { ChatInputCommandInteraction, PermissionsBitField, User, Guild, GuildMember, EmbedBuilder } from "discord.js";
+import Artibot, { log } from "artibot";
 
 /**
  * Unmute command
  * Uses Discord timeout feature added in Discord.js 13.4.0
  * @author GoudronViande24
  * @since 1.0.1
- * @param {CommandInteraction} interaction
- * @param {Artibot} artibot
  */
-export default async (interaction, { createEmbed, log }) => {
-	const user = interaction.options.getUser("user"),
-		guild = interaction.guild,
-		moderator = interaction.member;
+export default async (interaction: ChatInputCommandInteraction<"cached">, { createEmbed }: Artibot): Promise<void> => {
+	const user: User = interaction.options.getUser("user", true);
+	const guild: Guild = interaction.guild;
+	const moderator: GuildMember = interaction.member;
 
 	// Check for required permissions
 	if (!moderator.permissions.has([PermissionsBitField.Flags.ModerateMembers])) {
-		return await interaction.reply({
+		await interaction.reply({
 			embeds: [
 				createEmbed()
 					.setColor("Red")
@@ -26,13 +24,15 @@ export default async (interaction, { createEmbed, log }) => {
 			],
 			ephemeral: true
 		});
+
+		return;
 	}
 
 	// Get the member, because for some reason Discord returns a user
-	let member = await guild.members.fetch(user.id).then(m => { return m });
+	let member: GuildMember = await guild.members.fetch(user.id);
 
-	if (member.communicationDisabledUntil == null) {
-		return await interaction.reply({
+	if (member.communicationDisabledUntil === null) {
+		await interaction.reply({
 			embeds: [
 				createEmbed()
 					.setColor("Red")
@@ -41,19 +41,21 @@ export default async (interaction, { createEmbed, log }) => {
 			],
 			ephemeral: true
 		});
+
+		return;
 	}
 
-	const embed = createEmbed()
+	const embed: EmbedBuilder = createEmbed()
 		.setTitle("Unmute")
-		.setDescription(localizer.__("[[0]] got his voice back.", { placeholders: [member] }));
+		.setDescription(localizer.__("[[0]] got his voice back.", { placeholders: [`<@${member.id}>`] }));
 
 	// Try to timeout the member and create the embed according to what happens
 	try {
 		member = await member.timeout(null);
 
-		const dmEmbed = createEmbed()
+		const dmEmbed: EmbedBuilder = createEmbed()
 			.setTitle("Unmute")
-			.setDescription(localizer.__("[[0]] unmuted you on **[[1]]**.", { placeholders: [moderator, guild.name] }));
+			.setDescription(localizer.__("[[0]] unmuted you on **[[1]]**.", { placeholders: [`<@${moderator.id}>`, guild.name] }));
 
 		// Send DM to muted user to inform him of the reason and the moderator
 		try {
@@ -66,7 +68,7 @@ export default async (interaction, { createEmbed, log }) => {
 			} else {
 				embed.addFields({ name: localizer._("Note"), value: localizer._("An error occured while trying to send a DM to the user.") })
 					.setColor("Orange");
-				log("Moderation", error, "err");
+				log("Moderation", (error as Error).message, "err");
 			}
 		}
 	} catch (error) {
@@ -74,7 +76,7 @@ export default async (interaction, { createEmbed, log }) => {
 		if (error == "DiscordAPIError: Missing Permissions") {
 			embed.setDescription(localizer._("I don't have required permissions to mute this user!"));
 		} else {
-			log("Moderation", error, "err");
+			log("Moderation", (error as Error).message, "err");
 			embed.setDescription(localizer._("An error occured."));
 		}
 	}

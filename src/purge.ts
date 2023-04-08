@@ -1,17 +1,15 @@
 import { localizer } from "./index.js";
-import { PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, CommandInteraction } from "discord.js";
+import { PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, Collection, Message, PartialMessage, EmbedBuilder } from "discord.js";
 import Artibot from "artibot";
 
 /**
  * Purge command
  * @author GoudronViande24
  * @since 1.2.0
- * @param {CommandInteraction} interaction
- * @param {Artibot} artibot
  */
-export default async (interaction, { createEmbed }) => {
+export default async (interaction: ChatInputCommandInteraction<"cached">, { createEmbed }: Artibot): Promise<void> => {
 	if (!interaction.memberPermissions.has(PermissionsBitField.Flags.ManageMessages)) {
-		return await interaction.reply({
+		await interaction.reply({
 			embeds: [
 				createEmbed()
 					.setColor("Red")
@@ -20,42 +18,44 @@ export default async (interaction, { createEmbed }) => {
 			],
 			ephemeral: true
 		});
+
+		return;
 	}
 
-	const amount = interaction.options.getInteger("amount");
+	const amount: number = interaction.options.getInteger("amount", true);
 
-	const deleted = await interaction.channel.bulkDelete(amount, true);
+	const deleted: Collection<string, Message | PartialMessage | undefined> = await interaction.channel!.bulkDelete(amount, true);
 
-	const embed = createEmbed()
+	const embed: EmbedBuilder = createEmbed()
 		.setTitle("Purge")
 		.setDescription(
-			localizer.__("Deleted [[0]] messages.", { placeholders: [deleted.size] }) + (
+			localizer.__("Deleted [[0]] messages.", { placeholders: [deleted.size.toString()] }) + (
 				deleted.size < 1 ? "\n\n" + localizer._("By the way, I cannot delete messages older than 2 weeks.") : ""
 			)
 		);
 
-	const row = new ActionRowBuilder()
+	const row: ActionRowBuilder<ButtonBuilder> = new ActionRowBuilder<ButtonBuilder>()
 		.addComponents(
 			new ButtonBuilder()
-				.setLabel(localizer.__("Delete [[0]] more", { placeholders: [5] }))
+				.setLabel(localizer.__("Delete [[0]] more", { placeholders: ["5"] }))
 				.setStyle(ButtonStyle.Danger)
 				.setCustomId("purge-5")
 		)
 		.addComponents(
 			new ButtonBuilder()
-				.setLabel(localizer.__("Delete [[0]] more", { placeholders: [10] }))
+				.setLabel(localizer.__("Delete [[0]] more", { placeholders: ["10"] }))
 				.setStyle(ButtonStyle.Danger)
 				.setCustomId("purge-10")
 		)
 		.addComponents(
 			new ButtonBuilder()
-				.setLabel(localizer.__("Delete [[0]] more", { placeholders: [20] }))
+				.setLabel(localizer.__("Delete [[0]] more", { placeholders: ["20"] }))
 				.setStyle(ButtonStyle.Danger)
 				.setCustomId("purge-20")
 		)
 		.addComponents(
 			new ButtonBuilder()
-				.setLabel(localizer.__("Delete [[0]] more", { placeholders: [50] }))
+				.setLabel(localizer.__("Delete [[0]] more", { placeholders: ["50"] }))
 				.setStyle(ButtonStyle.Danger)
 				.setCustomId("purge-50")
 		);
